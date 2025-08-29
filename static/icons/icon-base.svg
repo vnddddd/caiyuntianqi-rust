@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1976d2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" fill="url(#skyGradient)" rx="80"/>
+  
+  <!-- Sun -->
+  <circle cx="180" cy="150" r="45" fill="#FFD700" opacity="0.9"/>
+  <g stroke="#FFD700" stroke-width="4" opacity="0.7">
+    <line x1="180" y1="80" x2="180" y2="100"/>
+    <line x1="180" y1="200" x2="180" y2="220"/>
+    <line x1="110" y1="150" x2="130" y2="150"/>
+    <line x1="230" y1="150" x2="250" y2="150"/>
+    <line x1="135" y1="105" x2="150" y2="120"/>
+    <line x1="210" y1="180" x2="225" y2="195"/>
+    <line x1="225" y1="105" x2="210" y2="120"/>
+    <line x1="150" y1="180" x2="135" y2="195"/>
+  </g>
+  
+  <!-- Cloud -->
+  <g fill="#FFFFFF" opacity="0.95">
+    <ellipse cx="320" cy="220" rx="60" ry="40"/>
+    <ellipse cx="280" cy="240" rx="40" ry="30"/>
+    <ellipse cx="360" cy="240" rx="45" ry="35"/>
+    <ellipse cx="320" cy="260" rx="50" ry="25"/>
+  </g>
+  
+  <!-- Weather Text -->
+  <text x="256" y="380" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#FFFFFF">天气</text>
+</svg>

@@ -1,0 +1,1765 @@
+/* 彩云天气网站 - 响应式样式 */
+
+/* CSS 变量定义 */
+:root {
+  --primary-color: #4A90E2;
+  --secondary-color: #7ED321;
+  --accent-color: #F5A623;
+  --text-primary: #2C3E50;
+  --text-secondary: #7F8C8D;
+  --text-light: #BDC3C7;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-card: #FFFFFF;
+  --border-color: #E1E8ED;
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s ease;
+
+  /* 液态玻璃设计系统变量 */
+  /* 透明度级别 - 增强通透性 */
+  --glass-opacity-light: rgba(255, 255, 255, 0.08);
+  --glass-opacity-medium: rgba(255, 255, 255, 0.12);
+  --glass-opacity-strong: rgba(255, 255, 255, 0.18);
+  --glass-opacity-ultra: rgba(255, 255, 255, 0.25);
+
+  /* 背景模糊强度 - 增强模糊效果 */
+  --glass-blur-light: blur(12px);
+  --glass-blur-medium: blur(20px);
+  --glass-blur-strong: blur(30px);
+  --glass-blur-ultra: blur(40px);
+
+  /* 边框颜色 - 更细腻的边框 */
+  --glass-border-light: rgba(255, 255, 255, 0.15);
+  --glass-border-medium: rgba(255, 255, 255, 0.2);
+  --glass-border-strong: rgba(255, 255, 255, 0.3);
+
+  /* 阴影效果 */
+  --glass-shadow-light: 0 4px 16px rgba(0, 0, 0, 0.05);
+  --glass-shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --glass-shadow-strong: 0 16px 48px rgba(0, 0, 0, 0.15);
+
+  /* 圆角 */
+  --glass-radius-small: 12px;
+  --glass-radius-medium: 16px;
+  --glass-radius-large: 20px;
+
+  /* 过渡动画 */
+  --glass-transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --glass-transition-fast: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --glass-transition-slow: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* 文字对比度增强 - 适配深色背景 */
+  --glass-text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --glass-text-primary: #ffffff;
+  --glass-text-secondary: #e0e0e0;
+
+  /* 动画关键帧 */
+  --glass-glow: 0 0 20px rgba(255, 255, 255, 0.3);
+  --glass-pulse-duration: 2s;
+}
+
+/* 基础重置和字体 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: url('day.png') center center / cover no-repeat;
+  min-height: 100vh;
+  transition: background 0.8s ease-in-out;
+  background-attachment: fixed;
+}
+
+/* 时间背景 - 白天背景 (6:00-19:00) */
+body.time-day {
+  background: url('day.png') center center / cover no-repeat;
+  background-attachment: fixed;
+}
+
+/* 时间背景 - 夜晚背景 (19:00-6:00) */
+body.time-night {
+  background: url('night.webp') center center / cover no-repeat;
+  background-attachment: fixed;
+}
+
+/* 夜晚模式下的液态玻璃适配 */
+body.time-night {
+  /* 夜晚模式下增强文字对比度 */
+  --glass-text-primary: #ffffff;
+  --glass-text-secondary: #e0e0e0;
+  --glass-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* 夜晚模式下调整透明度 - 更通透 */
+  --glass-opacity-light: rgba(255, 255, 255, 0.03);
+  --glass-opacity-medium: rgba(255, 255, 255, 0.06);
+  --glass-opacity-strong: rgba(255, 255, 255, 0.1);
+  --glass-opacity-ultra: rgba(255, 255, 255, 0.15);
+
+  /* 夜晚模式下增强边框可见性 */
+  --glass-border-light: rgba(255, 255, 255, 0.15);
+  --glass-border-medium: rgba(255, 255, 255, 0.25);
+  --glass-border-strong: rgba(255, 255, 255, 0.35);
+}
+
+/* 容器布局 */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 位置名称按钮样式 */
+.location-name-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white; /* 改为白色，在深色背景下更明显 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* 添加文字阴影增强可读性 */
+}
+
+.location-name-btn:hover {
+  background: rgba(74, 144, 226, 0.1);
+  color: var(--primary-color);
+}
+
+.location-arrow {
+  font-size: 1rem;
+  opacity: 0.7;
+  transition: var(--transition);
+}
+
+.location-name-btn:hover .location-arrow {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* 位置选择模态框 - 液态玻璃风格 */
+.location-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+}
+
+.modal-content {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--glass-radius-large);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow-strong);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--glass-border-medium);
+  background: var(--glass-opacity-light);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+.close-btn {
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  font-size: 1.35rem; /* 约21.6px，符合黄金比例(35px × 0.618) */
+  cursor: pointer;
+  color: var(--glass-text-secondary);
+  padding: 0;
+  border-radius: 50%;
+  width: 2.1875rem; /* 35px，更精致的尺寸 */
+  height: 2.1875rem; /* 35px，更精致的尺寸 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--glass-transition-fast);
+  line-height: 1;
+  font-weight: 500; /* 适中的字重，确保×符号清晰可见 */
+  /* 微调位置确保完美居中 */
+  position: relative;
+}
+
+.close-btn:hover {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-color: var(--glass-border-medium);
+  color: var(--glass-text-primary);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* 模态框滚动条液态玻璃样式 */
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: 4px;
+  border: 1px solid var(--glass-border-light);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-radius: 4px;
+  border: 1px solid var(--glass-border-medium);
+  transition: var(--glass-transition-fast);
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+}
+
+/* 当前位置操作区域 - 液态玻璃风格 */
+.current-location-actions {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: var(--glass-radius-medium);
+  box-shadow: var(--glass-shadow-medium);
+  transition: var(--glass-transition-fast);
+}
+
+.current-location-info h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white; /* 确保在深色背景下清晰可见 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* 添加文字阴影增强可读性 */
+}
+
+.current-location-display {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.25); /* 使用固定的透明度，确保在深色背景下可见 */
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--glass-radius-small);
+  transition: var(--glass-transition-fast);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.current-location-display span {
+  font-size: 0.95rem;
+  color: #2c3e50; /* 使用深色文字，在浅色透明背景上清晰可见 */
+  font-weight: 500;
+  text-shadow: none; /* 移除文字阴影，因为背景是浅色的 */
+}
+
+.location-action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.location-action-buttons .location-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  color: var(--glass-text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: var(--glass-transition-fast);
+  text-shadow: var(--glass-text-shadow);
+}
+
+.location-action-buttons .location-action-btn:hover {
+  background: var(--primary-color);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  color: white;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.location-action-buttons .location-action-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.location-action-buttons .location-action-btn.default {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.location-action-buttons .location-action-btn .action-text {
+  font-weight: 500;
+}
+
+.search-container {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  font-size: 0.875rem;
+  outline: none;
+  transition: var(--glass-transition-fast);
+  color: var(--glass-text-primary);
+}
+
+.search-container input:focus {
+  background: var(--glass-opacity-medium);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* 搜索框占位符文字样式 - 提高对比度 */
+.search-container input::placeholder {
+  color: rgba(255, 255, 255, 0.7); /* 白色半透明，确保在液态玻璃背景上清晰可见 */
+  opacity: 1; /* 确保在所有浏览器中显示 */
+}
+
+.search-container input::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-container input::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+
+.search-container input:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--glass-radius-small);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--glass-transition-fast);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.search-btn:hover {
+  background: #357ABD;
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-medium);
+}
+
+.search-results {
+  margin-bottom: 1.5rem;
+}
+
+.search-result-item {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.search-result-item:hover {
+  background: var(--bg-secondary);
+  border-color: var(--primary-color);
+}
+
+.popular-cities h4 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white; /* 确保在深色背景下清晰可见 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* 添加文字阴影增强可读性 */
+}
+
+.city-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.city-btn {
+  padding: 0.75rem;
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  cursor: pointer;
+  transition: var(--glass-transition-fast);
+  font-weight: 500;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+.city-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+/* 主要内容区域 */
+.main-content {
+  flex: 1;
+  padding: 3rem 0 2rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* 加载状态 */
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 错误状态 */
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.retry-btn {
+  padding: 0.75rem 2rem;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: var(--transition);
+}
+
+.retry-btn:hover {
+  background: #E09900;
+  transform: translateY(-2px);
+}
+
+/* 天气内容网格 */
+.weather-content {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* 卡片基础样式 - 液态玻璃风格 */
+.current-weather-card,
+.hourly-forecast-card {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: var(--glass-radius-medium);
+  padding: 2rem;
+  box-shadow: var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+/* 液态玻璃卡片悬停效果 */
+.current-weather-card:hover,
+.hourly-forecast-card:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow-strong);
+  transform: translateY(-2px);
+}
+
+/* 3天预报卡片特殊样式 - 液态玻璃风格，与生活指数卡片连接 */
+.daily-forecast-card {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: var(--glass-radius-medium);
+  padding: 2rem;
+  box-shadow: var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+/* 液态玻璃卡片悬停效果更新 */
+.current-weather-card:hover,
+.hourly-forecast-card:hover,
+.daily-forecast-card:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow-strong);
+  transform: translateY(-2px);
+}
+
+/* 为当前天气卡片添加微妙的内部光效 */
+.current-weather-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-border-strong), transparent);
+  opacity: 0.6;
+}
+
+.current-weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 改为center确保垂直居中对齐 */
+  margin-bottom: 1.5rem;
+}
+
+.location-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+  align-items: flex-start; /* 左对齐 */
+}
+
+.location-info h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0; /* 移除默认margin */
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+  line-height: 1.2; /* 设置行高 */
+}
+
+.location-info p {
+  color: var(--glass-text-secondary);
+  font-size: 0.875rem;
+  text-shadow: var(--glass-text-shadow);
+  margin: 0.25rem 0 0 0; /* 只在顶部添加小间距 */
+  line-height: 1.2; /* 设置行高 */
+}
+
+/* 右上角空气质量标题 */
+.air-quality-header h4 {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  text-align: right;
+}
+
+.air-quality-header .aqi-display {
+  display: none; /* 隐藏这里的显示，在右侧主区域显示 */
+}
+
+/* 主要天气信息布局：左中右三栏 */
+.current-weather-main {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 2rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* 左侧温度区域 */
+.temperature-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.temperature-display {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.current-temp {
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--primary-color);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.temp-unit {
+  font-size: 1.5rem;
+  color: var(--glass-text-secondary);
+  margin-left: 0.25rem;
+  text-shadow: var(--glass-text-shadow);
+}
+
+.weather-desc p:first-child {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+.weather-desc p:last-child {
+  color: var(--glass-text-secondary);
+  font-size: 0.875rem;
+  text-shadow: var(--glass-text-shadow);
+}
+
+/* 中间天气图标区域 */
+.weather-icon-section {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.weather-icon {
+  font-size: 5rem;
+}
+
+/* 右侧空气质量主要显示区域 */
+.air-quality-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.aqi-main {
+  text-align: right;
+}
+
+.aqi-title {
+  font-size: 0.875rem;
+  color: var(--glass-text-secondary);
+  margin-bottom: 0.5rem;
+  text-align: right;
+  text-shadow: var(--glass-text-shadow);
+}
+
+.aqi-value-large {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.aqi-desc-large {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--glass-text-primary);
+  margin-top: 0.25rem;
+  text-shadow: var(--glass-text-shadow);
+}
+
+/* 空气质量详细数据 - 改为和天气详情一样的格式 */
+.air-quality-details {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  padding-top: 1.5rem !important;
+  border-top: 1px solid var(--border-color) !important;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.detail-item {
+  text-align: center;
+}
+
+.detail-label {
+  display: block;
+  color: var(--glass-text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  text-shadow: var(--glass-text-shadow);
+}
+
+.detail-value {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+
+
+/* 预报卡片标题 - 液态玻璃增强 */
+.hourly-forecast-card h3,
+.daily-forecast-card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+/* 24小时预报 */
+.hourly-forecast-list {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+/* 24小时预报滚动条液态玻璃样式 */
+.hourly-forecast-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.hourly-forecast-list::-webkit-scrollbar-track {
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: 3px;
+  border: 1px solid var(--glass-border-light);
+}
+
+.hourly-forecast-list::-webkit-scrollbar-thumb {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-radius: 3px;
+  border: 1px solid var(--glass-border-medium);
+  transition: var(--glass-transition-fast);
+}
+
+.hourly-forecast-list::-webkit-scrollbar-thumb:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+}
+
+.hourly-item {
+  flex: 0 0 auto;
+  text-align: center;
+  padding: 1rem 0.75rem;
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  min-width: 80px;
+  transition: var(--glass-transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.hourly-item:hover {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-color: var(--glass-border-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.hourly-time {
+  font-size: 0.875rem;
+  color: var(--glass-text-secondary);
+  margin-bottom: 0.5rem;
+  text-shadow: var(--glass-text-shadow);
+}
+
+.hourly-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.hourly-temp {
+  font-weight: 600;
+  color: var(--glass-text-primary);
+  text-shadow: var(--glass-text-shadow);
+}
+
+/* 7天预报 */
+.daily-forecast-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.daily-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  transition: var(--glass-transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.daily-item:hover {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-color: var(--glass-border-medium);
+  transform: translateY(-1px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.daily-relative {
+  flex: 1;
+  text-align: left;
+}
+
+.daily-relative-day {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--glass-text-primary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), var(--glass-text-shadow); /* 增强文字阴影 */
+}
+
+.daily-weather {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 2;
+  justify-content: center;
+}
+
+.daily-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.daily-desc {
+  font-size: 0.875rem;
+  color: var(--glass-text-primary); /* 改为主要文字颜色提升对比度 */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), var(--glass-text-shadow); /* 增强文字阴影 */
+  font-weight: 500; /* 增加字重提升可读性 */
+}
+
+.daily-temp {
+  flex: 1;
+  text-align: center;
+}
+
+.daily-temp-range {
+  font-weight: 700; /* 增加字重 */
+  color: var(--glass-text-primary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), var(--glass-text-shadow); /* 增强温度数字阴影 */
+  font-size: 1rem; /* 确保温度数字足够大 */
+}
+
+.daily-date {
+  flex: 1;
+  text-align: right;
+}
+
+.daily-weekday {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--glass-text-secondary); /* 使用次要文字颜色保持视觉层级 */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), var(--glass-text-shadow); /* 增强阴影 */
+  opacity: 0.9; /* 轻微降低透明度，次于主要日期信息 */
+}
+
+.daily-date-text {
+  font-size: 0.875rem;
+  color: var(--glass-text-secondary);
+  text-shadow: var(--glass-text-shadow);
+  display: none; /* 隐藏具体日期，只显示星期几 */
+}
+
+
+
+/* 响应式设计 */
+@media (min-width: 768px) {
+  .weather-content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "current"
+      "hourly"
+      "daily";
+  }
+
+  .current-weather-card {
+    grid-area: current;
+  }
+
+  .hourly-forecast-card {
+    grid-area: hourly;
+  }
+
+  .daily-forecast-card {
+    grid-area: daily;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 40px;
+  }
+  
+  .main-content {
+    padding: 3rem 0;
+  }
+  
+  .weather-content {
+    gap: 2rem;
+  }
+  
+  .current-weather-card,
+  .air-quality-card,
+  .hourly-forecast-card,
+  .daily-forecast-card {
+    padding: 2rem;
+  }
+}
+
+/* 位置操作按钮 */
+.location-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+
+
+/* 收藏地址样式 */
+.favorite-locations {
+  margin-bottom: 1.5rem;
+}
+
+.favorite-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* 收藏列表滚动条液态玻璃样式 */
+.favorite-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.favorite-list::-webkit-scrollbar-track {
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border-radius: 3px;
+  border: 1px solid var(--glass-border-light);
+}
+
+.favorite-list::-webkit-scrollbar-thumb {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-radius: 3px;
+  border: 1px solid var(--glass-border-medium);
+  transition: var(--glass-transition-fast);
+}
+
+.favorite-list::-webkit-scrollbar-thumb:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+}
+
+.favorite-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.favorite-item:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.favorite-item.default {
+  background: #e3f2fd;
+  border-color: #2196F3;
+}
+
+.favorite-item.default::after {
+  content: "默认";
+  background: #2196F3;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.favorite-info {
+  flex: 1;
+}
+
+.favorite-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.favorite-address {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.favorite-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.favorite-action-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.favorite-action-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.favorite-action-btn.delete {
+  color: #f44336;
+}
+
+.favorite-action-btn.set-default {
+  color: #2196F3;
+}
+
+/* 桌面端水平布局 - 保持液态玻璃效果 */
+@media (min-width: 768px) {
+  .daily-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+    background: var(--glass-opacity-medium);
+    backdrop-filter: var(--glass-blur-medium);
+    -webkit-backdrop-filter: var(--glass-blur-medium);
+    border: 1px solid var(--glass-border-medium);
+    border-radius: var(--glass-radius-medium);
+    margin-bottom: 1rem;
+  }
+
+  /* 左侧：相对日期 */
+  .daily-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 80px;
+  }
+
+  .daily-relative-day {
+    font-size: 1.2rem;
+    font-weight: 700; /* 增加字重 */
+    color: var(--glass-text-primary); /* 使用液态玻璃主要文字颜色 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), var(--glass-text-shadow); /* 增强阴影 */
+    margin-bottom: 0;
+  }
+
+  /* 隐藏左侧的星期几 */
+  .daily-left .daily-weekday {
+    display: none;
+  }
+
+  /* 中间：天气信息 */
+  .daily-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .daily-weather {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .daily-icon {
+    font-size: 2.5rem;
+  }
+
+  .daily-desc {
+    font-size: 1.1rem;
+    color: var(--glass-text-primary); /* 使用液态玻璃主要文字颜色 */
+    font-weight: 600; /* 增加字重 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), var(--glass-text-shadow); /* 增强阴影 */
+  }
+
+  .daily-temp-range {
+    font-size: 1.2rem;
+    font-weight: 700; /* 增加字重 */
+    color: var(--glass-text-primary); /* 使用液态玻璃主要文字颜色 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), var(--glass-text-shadow); /* 增强温度阴影 */
+    margin-left: 1rem;
+  }
+
+  /* 右侧：星期几 */
+  .daily-item::after {
+    content: attr(data-weekday);
+    font-size: 1.1rem;
+    font-weight: 600; /* 增加字重 */
+    color: var(--glass-text-secondary); /* 使用液态玻璃次要文字颜色 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), var(--glass-text-shadow); /* 增强阴影 */
+    min-width: 60px;
+    text-align: right;
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 767px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .header .container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .location-btn,
+  .manual-location-btn,
+  .refresh-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  /* 移动端当前天气布局调整 */
+  .current-weather-header {
+    flex-direction: row; /* 保持水平布局 */
+    align-items: center; /* 确保垂直居中对齐 */
+    gap: 1rem;
+  }
+
+  .air-quality-info {
+    align-self: stretch;
+  }
+
+  .air-quality-info h4 {
+    text-align: left;
+  }
+
+  .air-quality-info .aqi-display {
+    justify-content: flex-start;
+  }
+
+  .current-weather-main {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  .temperature-section {
+    align-items: center;
+  }
+
+  .weather-icon {
+    font-size: 4rem;
+  }
+
+  .air-details-section {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .air-details-section .air-details {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .weather-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .daily-forecast-card {
+    padding: 1rem;
+  }
+
+  .daily-forecast {
+    gap: 0;
+  }
+
+  .daily-item {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+    padding: 1.25rem !important;
+    background: var(--glass-opacity-medium) !important;
+    backdrop-filter: var(--glass-blur-medium) !important;
+    -webkit-backdrop-filter: var(--glass-blur-medium) !important;
+    border: 1px solid var(--glass-border-medium) !important;
+    border-radius: var(--glass-radius-medium) !important;
+    margin-bottom: 1rem !important;
+    text-align: left !important;
+  }
+
+  /* 左侧：相对日期和星期几 */
+  .daily-left {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.25rem !important;
+    min-width: 60px !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+  }
+
+  .daily-relative-day {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: var(--glass-text-primary) !important; /* 使用液态玻璃主要文字颜色 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), var(--glass-text-shadow) !important; /* 增强阴影 */
+    line-height: 1.2 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .daily-weekday {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important; /* 增加字重提升可读性 */
+    color: var(--glass-text-secondary) !important; /* 使用液态玻璃次要文字颜色 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), var(--glass-text-shadow) !important; /* 增强阴影 */
+    line-height: 1.2 !important;
+    opacity: 0.85; /* 轻微降低透明度保持视觉层级 */
+  }
+
+  /* 右侧：天气信息和温度 */
+  .daily-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    flex: 1 !important;
+    justify-content: flex-end !important;
+    width: auto !important;
+    text-align: left !important;
+  }
+
+  .daily-weather {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    flex-direction: row !important;
+    margin-bottom: 0 !important;
+  }
+
+  .daily-icon {
+    font-size: 2.2rem !important;
+  }
+
+  .daily-desc {
+    font-size: 1rem !important;
+    color: var(--glass-text-primary) !important; /* 使用液态玻璃主要文字颜色 */
+    font-weight: 600 !important; /* 增加字重 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), var(--glass-text-shadow) !important; /* 增强阴影 */
+  }
+
+  .daily-temp-range {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--glass-text-primary) !important; /* 使用液态玻璃主要文字颜色 */
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7), var(--glass-text-shadow) !important; /* 增强温度阴影 */
+    text-align: right !important;
+    min-width: 80px !important;
+  }
+
+  /* 隐藏不需要的元素 */
+  .daily-temp {
+    display: none;
+  }
+
+  .daily-date {
+    display: none;
+  }
+
+  .daily-relative {
+    display: none;
+  }
+
+  /* 移动端模态框优化 */
+  .modal-content {
+    width: 95%;
+    margin: 1rem;
+    max-height: 90vh;
+    background: var(--glass-opacity-ultra);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+  }
+
+  .modal-header,
+  .modal-body {
+    padding: 1rem;
+  }
+
+  /* 移动端液态玻璃性能优化 */
+  .current-weather-card,
+  .hourly-forecast-card,
+  .daily-forecast-card,
+  .weather-tips-card {
+    /* 移动端使用更强的模糊效果和更低的透明度 */
+    backdrop-filter: blur(25px) saturate(150%);
+    -webkit-backdrop-filter: blur(25px) saturate(150%);
+    /* 极低的透明度以增强通透性 */
+    background: rgba(255, 255, 255, 0.05) !important;
+    /* 更细的边框 */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    /* 增强阴影效果 */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+  
+  /* 移动端卡片内边距调整 */
+  .current-weather-card,
+  .hourly-forecast-card,
+  .daily-forecast-card,
+  .weather-tips-card {
+    padding: 1.25rem !important;
+  }
+
+  .search-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-container input {
+    width: 100%;
+  }
+
+  .city-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .city-btn {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* 天气生活指数提醒卡片 - 液态玻璃风格 */
+.weather-tips-card {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  -webkit-backdrop-filter: var(--glass-blur-medium) saturate(180%);
+  border: 1px solid var(--glass-border-medium);
+  border-radius: var(--glass-radius-medium);
+  padding: 2rem;
+  box-shadow: var(--glass-shadow-medium);
+  transition: var(--glass-transition);
+  margin-bottom: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-tips-card:hover {
+  background: var(--glass-opacity-strong);
+  backdrop-filter: var(--glass-blur-strong);
+  -webkit-backdrop-filter: var(--glass-blur-strong);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--glass-shadow-strong);
+  transform: translateY(-2px);
+}
+
+.weather-tips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.weather-tip-item {
+  background: var(--glass-opacity-light);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--glass-radius-small);
+  padding: 0.75rem 1rem;
+  color: var(--glass-text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  transition: var(--glass-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-shadow: var(--glass-text-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-tip-item:hover {
+  background: var(--glass-opacity-medium);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border-color: var(--glass-border-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+/* 桌面端沉浸式布局优化 - 使用液态玻璃效果 */
+@media (min-width: 1024px) {
+  .weather-tips-card {
+    background: var(--glass-opacity-medium);
+    backdrop-filter: var(--glass-blur-medium);
+    -webkit-backdrop-filter: var(--glass-blur-medium);
+    border: 1px solid var(--glass-border-medium);
+  }
+
+  .weather-tip-item {
+    background: var(--glass-opacity-light);
+    backdrop-filter: var(--glass-blur-light);
+    -webkit-backdrop-filter: var(--glass-blur-light);
+    border: 1px solid var(--glass-border-light);
+  }
+
+  .weather-tip-item:hover {
+    background: var(--glass-opacity-medium);
+    backdrop-filter: var(--glass-blur-medium);
+    -webkit-backdrop-filter: var(--glass-blur-medium);
+    border-color: var(--glass-border-medium);
+  }
+}
+
+/* 移动端优化 */
+@media (max-width: 767px) {
+  .weather-tips {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .weather-tip-item {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* 液态玻璃性能优化 - 保留效果但减少性能开销 */
+
+/* 使用will-change优化动画性能 */
+.current-weather-card,
+.hourly-forecast-card,
+.daily-forecast-card,
+.weather-tips-card {
+  will-change: transform;
+  transform: translateZ(0); /* 启用硬件加速 */
+}
+
+/* 简化的入场动画 - 只使用opacity和transform */
+@keyframes glassSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 入场动画 - 移除backdrop-filter动画以提升性能 */
+.current-weather-card {
+  animation: glassSlideIn 0.4s ease-out;
+}
+
+.hourly-forecast-card {
+  animation: glassSlideIn 0.4s ease-out 0.1s both;
+}
+
+.daily-forecast-card {
+  animation: glassSlideIn 0.4s ease-out 0.2s both;
+}
+
+.weather-tips-card {
+  animation: glassSlideIn 0.4s ease-out 0.3s both;
+}
+
+/* 移除hover时的动画，只使用transition */
+.hourly-item:hover,
+.daily-item:hover,
+.weather-tip-item:hover {
+  animation: none;
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* 减少动画对性能的影响 */
+@media (prefers-reduced-motion: reduce) {
+  .current-weather-card,
+  .hourly-forecast-card,
+  .daily-forecast-card,
+  .weather-tips-card,
+  .hourly-item,
+  .daily-item,
+  .weather-tip-item {
+    animation: none !important;
+  }
+
+  * {
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* 桌面端液态玻璃优化 */
+@media (min-width: 1024px) {
+  /* 桌面端增强液态玻璃效果 */
+  .current-weather-card,
+  .hourly-forecast-card {
+    background: var(--glass-opacity-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: var(--glass-shadow-strong);
+  }
+
+  /* 3天预报卡片 - 与生活指数连接 */
+  .daily-forecast-card {
+    background: var(--glass-opacity-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: 1px solid var(--glass-border-strong);
+    border-bottom: none;
+    border-radius: var(--glass-radius-medium) var(--glass-radius-medium) 0 0;
+    box-shadow: var(--glass-shadow-strong);
+  }
+
+  /* 生活指数卡片 - 与3天预报连接 */
+  .weather-tips-card {
+    background: var(--glass-opacity-strong);
+    backdrop-filter: var(--glass-blur-strong);
+    -webkit-backdrop-filter: var(--glass-blur-strong);
+    border: 1px solid var(--glass-border-strong);
+    border-top: none;
+    border-radius: 0 0 var(--glass-radius-medium) var(--glass-radius-medium);
+    box-shadow: var(--glass-shadow-strong);
+  }
+
+  /* 桌面端增强悬停效果 */
+  .current-weather-card:hover,
+  .hourly-forecast-card:hover,
+  .daily-forecast-card:hover,
+  .weather-tips-card:hover {
+    background: var(--glass-opacity-ultra);
+    backdrop-filter: var(--glass-blur-ultra);
+    -webkit-backdrop-filter: var(--glass-blur-ultra);
+    transform: translateY(-4px);
+  }
+
+  /* 桌面端模态框增强 */
+  .modal-content {
+    background: var(--glass-opacity-ultra);
+    backdrop-filter: var(--glass-blur-ultra);
+    -webkit-backdrop-filter: var(--glass-blur-ultra);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: var(--glass-shadow-strong);
+  }
+
+  /* 桌面端增强文字可读性 */
+  .current-temp,
+  .aqi-value-large {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  }
+}
+
+
+
+/* 阳光效果动画 */
+@keyframes sunGlow {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+}
+
+/* PWA 更新通知样式 */
+.update-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  background: var(--glass-opacity-ultra);
+  backdrop-filter: var(--glass-blur-medium);
+  -webkit-backdrop-filter: var(--glass-blur-medium);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--glass-radius-medium);
+  box-shadow: var(--glass-shadow-strong);
+  padding: 16px 24px;
+  max-width: 90%;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.update-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.update-content button {
+  background: var(--glass-opacity-medium);
+  border: 1px solid var(--glass-border-light);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--glass-transition-fast);
+}
+
+.update-content button:hover {
+  background: var(--glass-opacity-strong);
+  transform: translateY(-1px);
+}

@@ -1,0 +1,21 @@
+{
+  "name": "caiyun-weather-app",
+  "version": "1.0.0",
+  "description": "彩云天气查看网站 - 响应式设计，支持桌面端和移动端",
+  "exports": "./main.ts",
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read --env --watch main.ts",
+    "start": "deno run --allow-net --allow-env --allow-read --env main.ts",
+    "preview": "deno run --allow-net --allow-env --allow-read --env main.ts"
+  },
+  "imports": {
+    "@std/http/server": "https://deno.land/std@0.208.0/http/server.ts",
+    "@std/http/file-server": "https://deno.land/std@0.208.0/http/file_server.ts"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "checkJs": false,
+    "lib": ["dom", "dom.iterable", "es2022"]
+  }
+}

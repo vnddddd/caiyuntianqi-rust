@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气 - 实时天气查看</title>
+    <meta name="description" content="基于彩云天气API的响应式天气查看网站，支持实时天气、预报信息查询">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1976d2">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="彩云天气">
+    <meta name="application-name" content="彩云天气">
+    <meta name="msapplication-TileColor" content="#1976d2">
+    <meta name="msapplication-config" content="/static/browserconfig.xml">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/icon-16x16.png">
+    <link rel="stylesheet" href="/static/styles.css?v=13">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+    <div class="app-container">
+
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <div class="container">
+                <!-- 位置选择模态框 -->
+                <div class="location-modal" id="locationModal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>选择位置</h3>
+                            <button class="close-btn" id="closeModalBtn">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- 当前位置操作区域 -->
+                            <div class="current-location-actions" id="currentLocationActions" style="display: none;">
+                                <div class="current-location-info">
+                                    <h4>当前位置</h4>
+                                    <div class="current-location-display">
+                                        <span id="modalCurrentLocation">当前位置</span>
+                                    </div>
+                                    <div class="location-action-buttons">
+                                        <button class="location-action-btn" id="modalFavoriteBtn" title="收藏此位置">
+                                            <span class="favorite-icon">☆</span>
+                                            <span class="action-text">收藏</span>
+                                        </button>
+                                        <button class="location-action-btn" id="modalSetDefaultBtn" title="设为默认位置">
+                                            <span class="default-icon">📌</span>
+                                            <span class="action-text">设为默认</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="search-container">
+                                <input type="text" id="locationSearch" placeholder="输入城市名称，如：北京、上海、广州" />
+                                <button class="search-btn" id="searchBtn">搜索</button>
+                            </div>
+                            <div class="search-results" id="searchResults">
+                                <!-- 搜索结果将在这里显示 -->
+                            </div>
+
+                            <!-- 收藏地址 -->
+                            <div class="favorite-locations" id="favoriteLocations" style="display: none;">
+                                <h4>收藏地址</h4>
+                                <div class="favorite-list" id="favoriteList">
+                                    <!-- 收藏的地址将在这里显示 -->
+                                </div>
+                            </div>
+
+                            <div class="popular-cities">
+                                <h4>热门城市</h4>
+                                <div class="city-grid">
+                                    <button class="city-btn" data-city="北京" data-lng="116.4074" data-lat="39.9042">北京</button>
+                                    <button class="city-btn" data-city="上海" data-lng="121.4737" data-lat="31.2304">上海</button>
+                                    <button class="city-btn" data-city="广州" data-lng="113.2644" data-lat="23.1291">广州</button>
+                                    <button class="city-btn" data-city="深圳" data-lng="114.0579" data-lat="22.5431">深圳</button>
+                                    <button class="city-btn" data-city="杭州" data-lng="120.1551" data-lat="30.2741">杭州</button>
+                                    <button class="city-btn" data-city="南京" data-lng="118.7969" data-lat="32.0603">南京</button>
+                                    <button class="city-btn" data-city="成都" data-lng="104.0665" data-lat="30.5723">成都</button>
+                                    <button class="city-btn" data-city="西安" data-lng="108.9398" data-lat="34.3416">西安</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 加载状态 -->
+                <div class="loading-state" id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <p>正在获取天气信息...</p>
+                </div>
+
+                <!-- 错误状态 -->
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-icon">⚠️</div>
+                    <h3>获取天气信息失败</h3>
+                    <p id="errorMessage">请检查网络连接或稍后重试</p>
+                    <button class="retry-btn" id="retryBtn">重试</button>
+                </div>
+
+                <!-- 天气信息展示 -->
+                <div class="weather-content" id="weatherContent" style="display: none;">
+                    <!-- 当前天气卡片 -->
+                    <div class="current-weather-card">
+                        <!-- 位置和更新时间 -->
+                        <div class="current-weather-header">
+                            <div class="location-info">
+                                <div class="location-title">
+                                    <button class="location-name-btn" id="currentLocationBtn" title="点击选择位置">
+                                        <span id="currentLocation">当前位置</span>
+                                        <span class="location-arrow">📍</span>
+                                    </button>
+                                </div>
+                                <p id="updateTime">更新时间</p>
+                            </div>
+                            <div class="air-quality-header">
+                                <!-- 空气质量标题移到右侧显示区域 -->
+                            </div>
+                        </div>
+
+                        <!-- 主要天气信息：左侧温度，中间图标，右侧空气质量 -->
+                        <div class="current-weather-main" style="display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-bottom: 24px;">
+                            <div class="temperature-section">
+                                <div class="temperature-display">
+                                    <span class="current-temp" id="currentTemp">--</span>
+                                    <span class="temp-unit">°C</span>
+                                </div>
+                                <div class="weather-desc">
+                                    <p id="weatherDesc">--</p>
+                                    <p id="feelsLike">体感温度 --°C</p>
+                                </div>
+                            </div>
+
+                            <div class="weather-icon-section">
+                                <div class="weather-icon" id="weatherIcon">☀️</div>
+                            </div>
+
+                            <div class="air-quality-section">
+                                <div class="aqi-main">
+                                    <h4 class="aqi-title">空气质量</h4>
+                                    <div class="aqi-value-large" id="aqiValueLarge">--</div>
+                                    <div class="aqi-desc-large" id="aqiDescLarge">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 空气质量详细数据 - 改为和天气详情一样的格式 -->
+                        <div class="air-quality-details">
+                            <div class="detail-item">
+                                <span class="detail-label">PM2.5</span>
+                                <span class="detail-value" id="pm25">-- μg/m³</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">PM10</span>
+                                <span class="detail-value" id="pm10">-- μg/m³</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">O₃</span>
+                                <span class="detail-value" id="o3">-- μg/m³</span>
+                            </div>
+                        </div>
+
+                        <!-- 底部详细信息 -->
+                        <div class="weather-details">
+                            <div class="detail-item">
+                                <span class="detail-label">湿度</span>
+                                <span class="detail-value" id="humidity">--%</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">风速</span>
+                                <span class="detail-value" id="windSpeed">-- km/h</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">能见度</span>
+                                <span class="detail-value" id="visibility">-- km</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">气压</span>
+                                <span class="detail-value" id="pressure">-- hPa</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- 24小时预报 -->
+                    <div class="hourly-forecast-card">
+                        <h3>24小时预报</h3>
+                        <div class="hourly-forecast-list" id="hourlyForecast">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 3天预报 -->
+                    <div class="daily-forecast-card">
+                        <h3>3天预报</h3>
+                        <div class="daily-forecast-list" id="dailyForecast">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 天气生活提醒 -->
+                    <div class="weather-tips-card" id="weatherTipsCard" style="display: none;">
+                        <div class="weather-tips" id="weatherTips">
+                            <!-- 天气生活提醒将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 尽早修复被动事件监听器警告
+        (function() {
+          let supportsPassive = false;
+          try {
+            const opts = Object.defineProperty({}, 'passive', {
+              get: function() {
+                supportsPassive = true;
+              }
+            });
+            window.addEventListener('testPassive', null, opts);
+            window.removeEventListener('testPassive', null, opts);
+          } catch (e) {}
+
+          if (supportsPassive) {
+            const addEventListenerOriginal = EventTarget.prototype.addEventListener;
+            EventTarget.prototype.addEventListener = function(type, listener, options) {
+              if (type === 'touchstart' || type === 'touchmove' || type === 'wheel' || type === 'scroll' || type === 'touchend') {
+                if (typeof options === 'boolean') {
+                  options = { passive: true, capture: options };
+                } else if (typeof options === 'object' && options !== null) {
+                  if (options.passive === undefined) {
+                    options.passive = true;
+                  }
+                } else {
+                  options = { passive: true };
+                }
+              }
+              addEventListenerOriginal.call(this, type, listener, options);
+            };
+          }
+        })();
+
+        // 临时调试代码
+        console.log('[调试] 页面加载开始');
+        window.addEventListener('error', (e) => {
+            console.error('[全局错误]', e.message, e.filename, e.lineno, e.colno);
+        });
+    </script>
+    <script src="/static/script.js?v=11"></script>
+</body>
+</html>

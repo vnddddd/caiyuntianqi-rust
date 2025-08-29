@@ -1,0 +1,42 @@
+# 环境变量文件
+.env
+.env.local
+.env.production
+
+# API 密钥和敏感信息
+**/api_keys.txt
+**/tokens.txt
+**/*token*
+**/*secret*
+**/*key*
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.temp
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# IDE 文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 依赖目录
+node_modules/
+.deno/
+
+# 构建输出
+dist/
+build/
+美团IP查询接口.md
+
+#Claude code配置
+.claude/
+CLAUDE.md

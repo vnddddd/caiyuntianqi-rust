@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气应用测试</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .log {
+            background: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>天气应用调试测试</h1>
+    <div id="status">正在测试...</div>
+    <div id="logs"></div>
+
+    <script>
+        const logs = document.getElementById('logs');
+        
+        function addLog(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(div);
+            console.log(message);
+        }
+
+        async function runTests() {
+            addLog('开始测试...', 'info');
+            
+            // 测试1: IP定位API
+            try {
+                addLog('测试 /api/location/ip ...', 'info');
+                const response = await fetch('/api/location/ip');
+                addLog(`响应状态: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addLog(`IP定位数据: ${JSON.stringify(data)}`, 'success');
+                    
+                    // 测试2: 天气API
+                    if (data.lat && data.lng) {
+                        addLog(`测试 /api/weather?lng=${data.lng}&lat=${data.lat} ...`, 'info');
+                        const weatherResponse = await fetch(`/api/weather?lng=${data.lng}&lat=${data.lat}`);
+                        addLog(`天气API响应状态: ${weatherResponse.status}`, weatherResponse.ok ? 'success' : 'error');
+                        
+                        if (weatherResponse.ok) {
+                            const weatherData = await weatherResponse.json();
+                            addLog(`当前温度: ${weatherData.current?.temperature}°C`, 'success');
+                            addLog(`天气: ${weatherData.current?.weather_info?.desc}`, 'success');
+                            addLog(`数据完整性检查:
+- current: ${weatherData.current ? '✓' : '✗'}
+- hourly: ${weatherData.hourly ? '✓' : '✗'}  
+- daily: ${weatherData.daily ? '✓' : '✗'}`, 'success');
+                            
+                            document.getElementById('status').innerHTML = '<span style="color:green">✅ 所有测试通过！</span>';
+                        } else {
+                            const error = await weatherResponse.text();
+                            addLog(`天气API错误: ${error}`, 'error');
+                        }
+                    }
+                } else {
+                    const error = await response.text();
+                    addLog(`IP定位API错误: ${error}`, 'error');
+                }
+            } catch (error) {
+                addLog(`捕获错误: ${error.message}`, 'error');
+                addLog(`错误堆栈: ${error.stack}`, 'error');
+                document.getElementById('status').innerHTML = '<span style="color:red">❌ 测试失败</span>';
+            }
+            
+            addLog('测试完成', 'info');
+        }
+
+        // 运行测试
+        runTests();
+    </script>
+</body>
+</html>
