@@ -875,6 +875,10 @@ body.time-night {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .hourly-temp {
@@ -937,6 +941,10 @@ body.time-night {
 .daily-icon {
   font-size: 1.5rem;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .daily-desc {
@@ -1762,4 +1770,25 @@ body.time-night {
 .update-content button:hover {
   background: var(--glass-opacity-strong);
   transform: translateY(-1px);
+}
+.icon-stacked {
+  position: relative;
+  width: 2.0em;        /* 稍收紧以便容器居中更贴合 */
+  height: 1.8em;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+.icon-stacked span { display: block; line-height: 1; }
+.icon-stacked .i-back {
+  position: absolute;
+  left: 0.35em;  /* 再向左，靠近云 */
+  top: 0.08em;  /* 略上移，保证视觉中心 */
+  z-index: 1;
+}
+.icon-stacked .i-front {
+  position: absolute;
+  left: 0.25em;  /* 明显向右，覆盖月亮约一半 */
+  top: 0.24em;   /* 略上移，加深遮挡 */
+  z-index: 2;
 }

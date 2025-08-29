@@ -720,7 +720,13 @@ class WeatherApp {
     // 使用requestAnimationFrame批量更新，减少DOM操作
     requestAnimationFrame(() => {
       updates.forEach(({ element, content }) => {
-        if (element) element.textContent = content;
+        if (!element) return;
+        // weatherIcon 允许后端返回 HTML（例如云遮月组合图标）
+        if (element === this.domElements.weatherIcon && typeof content === 'string' && content.trim().startsWith('<')) {
+          element.innerHTML = content;
+        } else {
+          element.textContent = content;
+        }
       });
 
       // 更新基于时间的背景
