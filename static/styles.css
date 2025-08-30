@@ -1801,8 +1801,7 @@ body.time-night {
   gap: 0.5rem;
   width: 100%;
 }
-.locate-btn { background: var(--glass-opacity-light); backdrop-filter: var(--glass-blur-light); -webkit-backdrop-filter: var(--glass-blur-light); border: 1px solid var(--glass-border-light); color: var(--glass-text-primary); padding: 0.25rem 0.5rem; border-radius: 8px; cursor: pointer; transition: var(--glass-transition-fast); line-height: 1; }
-.locate-btn:hover { background: var(--glass-opacity-medium); border-color: var(--glass-border-medium); }
+/* .locate-btn 样式已移除（按钮删除） */
 
 /* 调整定位按钮与“当前位置”标题顶对齐并靠右 */
 .current-location-info .current-location-title {
@@ -1817,8 +1816,4 @@ body.time-night {
   margin: 0;
   line-height: 1.2;
 }
-.current-location-info .current-location-title .locate-btn {
-  align-self: flex-start;
-  padding: 0.15rem 0.5rem;
-  line-height: 1;
-}
+/* .current-location-info .current-location-title .locate-btn 样式已移除 */

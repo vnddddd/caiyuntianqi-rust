@@ -187,7 +187,7 @@ class WeatherApp {
       'currentTemp', 'weatherIcon', 'weatherDesc', 'feelsLike',
       'humidity', 'windSpeed', 'visibility', 'pressure',
       'currentLocationBtn', 'retryBtn', 'closeModalBtn', 'searchBtn',
-      'locationSearch', 'modalFavoriteBtn', 'modalSetDefaultBtn', 'modalLocateBtn',
+      'locationSearch', 'modalFavoriteBtn', 'modalSetDefaultBtn',
       'locationModal', 'hourlyForecast', 'dailyForecast',
       'aqiValue', 'aqiDesc', 'aqiValueLarge', 'aqiDescLarge',
       'pm25', 'pm10', 'o3', 'weatherTips', 'weatherTipsCard',
@@ -244,13 +244,7 @@ class WeatherApp {
     this.addEventListenerSafe(this.domElements.retryBtn, 'click', (e) => { e.preventDefault?.(); this.getCurrentLocation(); });
     this.addEventListenerSafe(this.domElements.closeModalBtn, 'click', (e) => { e.preventDefault?.(); this.hideLocationModal(); });
     this.addEventListenerSafe(this.domElements.searchBtn, 'click', (e) => { e.preventDefault?.(); this.searchLocation(); });
-    // 模态内“定位”按钮：关闭模态并触发系统定位
-    this.addEventListenerSafe(this.domElements.modalLocateBtn, 'click', (e) => {
-      e && e.preventDefault && e.preventDefault();
-      e && e.stopPropagation && e.stopPropagation();
-      this.hideLocationModal();
-      this.getCurrentLocation(true);
-    });
+    // 已移除“使用系统定位”按钮
 
     // 模态框中的按钮事件
     this.addEventListenerSafe(this.domElements.modalFavoriteBtn, 'click', () => this.toggleFavorite());
