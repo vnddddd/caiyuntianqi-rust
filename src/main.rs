@@ -469,7 +469,8 @@ async fn api_location_search(Query(qs): Query<SearchQuery>, State(state): State<
 async fn api_location_ip(State(_state): State<AppState>, headers: axum::http::HeaderMap) -> impl IntoResponse {
     // 尽力从常见代理头中取真实 IP（支持 IPv4/IPv6，去端口/方括号）
     let raw = headers
-        .get("x-forwarded-for").and_then(|v| v.to_str().ok()).and_then(|s| s.split(',').next())
+        .get("cf-connecting-ip").and_then(|v| v.to_str().ok())
+        .or_else(|| headers.get("x-forwarded-for").and_then(|v| v.to_str().ok()).and_then(|s| s.split(',').next()))
         .or_else(|| headers.get("x-real-ip").and_then(|v| v.to_str().ok()))
         .unwrap_or("")
         .trim()

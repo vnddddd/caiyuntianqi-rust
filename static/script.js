@@ -241,11 +241,13 @@ class WeatherApp {
   bindEvents() {
     // 使用安全的事件监听器绑定
     this.addEventListenerSafe(this.domElements.currentLocationBtn, 'click', () => this.showLocationModal());
-    this.addEventListenerSafe(this.domElements.retryBtn, 'click', () => this.getCurrentLocation());
-    this.addEventListenerSafe(this.domElements.closeModalBtn, 'click', () => this.hideLocationModal());
-    this.addEventListenerSafe(this.domElements.searchBtn, 'click', () => this.searchLocation());
+    this.addEventListenerSafe(this.domElements.retryBtn, 'click', (e) => { e.preventDefault?.(); this.getCurrentLocation(); });
+    this.addEventListenerSafe(this.domElements.closeModalBtn, 'click', (e) => { e.preventDefault?.(); this.hideLocationModal(); });
+    this.addEventListenerSafe(this.domElements.searchBtn, 'click', (e) => { e.preventDefault?.(); this.searchLocation(); });
     // 模态内“定位”按钮：关闭模态并触发系统定位
-    this.addEventListenerSafe(this.domElements.modalLocateBtn, 'click', () => {
+    this.addEventListenerSafe(this.domElements.modalLocateBtn, 'click', (e) => {
+      e && e.preventDefault && e.preventDefault();
+      e && e.stopPropagation && e.stopPropagation();
       this.hideLocationModal();
       this.getCurrentLocation(true);
     });
@@ -340,11 +342,18 @@ class WeatherApp {
   getCurrentLocation(forceFresh = false) {
     this.showLoading('正在获取位置信息...');
     
+    // 某些设备/网络下，10s 容易超时。放宽到 30s，强制更新时缩短缓存以提升准确性。
     const options = {
       enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: forceFresh ? 0 : 300000 // 定位按钮强制新定位
+      timeout: 30000,
+      maximumAge: forceFresh ? 60000 : 300000
     };
+
+    if (!('geolocation' in navigator)) {
+      // 环境不支持 geolocation，直接走 IP 定位降级
+      this.onLocationError({ code: 0, message: 'geolocation not supported' });
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       (position) => this.onLocationSuccess(position),
@@ -373,17 +382,22 @@ class WeatherApp {
     let errorMessage = 'GPS定位失败';
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        errorMessage = 'GPS位置访问被拒绝，尝试使用 IP 定位...';
+        errorMessage = '已拒绝位置权限，将改用 IP 或手动选择';
         break;
       case error.POSITION_UNAVAILABLE:
-        errorMessage = 'GPS位置信息不可用，尝试使用 IP 定位...';
+        errorMessage = 'GPS位置信息不可用，将改用 IP 定位...';
         break;
       case error.TIMEOUT:
-        errorMessage = 'GPS定位超时，尝试使用 IP 定位...';
+        errorMessage = 'GPS定位超时，将改用 IP 定位...';
         break;
     }
 
     this.showLoading(errorMessage);
+
+    if (error.code === 1 /* PERMISSION_DENIED */) {
+      // 立刻展示手动选择入口，避免用户无感
+      this.showLocationModal();
+    }
 
     // 尝试 IP 定位作为备用方案
     try {
