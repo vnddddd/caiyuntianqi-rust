@@ -84,7 +84,13 @@ async fn main() -> anyhow::Result<()> {
     };
 
     let port: u16 = std::env::var("PORT").ok().and_then(|s| s.parse().ok()).unwrap_or(8000);
-    let addr: SocketAddr = ([0, 0, 0, 0], port).into();
+    // 可选从环境变量读取主机地址，默认 0.0.0.0
+    let host = std::env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
+    // 兼容 IPv6: 若 host 含有冒号且未被 [] 包裹，则包裹后再解析
+    let host_fmt = if host.contains(':') && !host.starts_with('[') { format!("[{}]", host) } else { host };
+    let addr: SocketAddr = format!("{}:{}", host_fmt, port)
+        .parse()
+        .unwrap_or(([0, 0, 0, 0], port).into());
 
     let static_service = ServeDir::new("static");
 

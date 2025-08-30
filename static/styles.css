@@ -1792,3 +1792,33 @@ body.time-night {
   top: 0.24em;   /* 略上移，加深遮挡 */
   z-index: 2;
 }
+
+/* 定位按钮与标题同行 */
+.current-location-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+}
+.locate-btn { background: var(--glass-opacity-light); backdrop-filter: var(--glass-blur-light); -webkit-backdrop-filter: var(--glass-blur-light); border: 1px solid var(--glass-border-light); color: var(--glass-text-primary); padding: 0.25rem 0.5rem; border-radius: 8px; cursor: pointer; transition: var(--glass-transition-fast); line-height: 1; }
+.locate-btn:hover { background: var(--glass-opacity-medium); border-color: var(--glass-border-medium); }
+
+/* 调整定位按钮与“当前位置”标题顶对齐并靠右 */
+.current-location-info .current-location-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 0.75rem; /* 与下方输入框拉开间距 */
+}
+.current-location-info .current-location-title h4 {
+  margin: 0;
+  line-height: 1.2;
+}
+.current-location-info .current-location-title .locate-btn {
+  align-self: flex-start;
+  padding: 0.15rem 0.5rem;
+  line-height: 1;
+}

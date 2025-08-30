@@ -187,7 +187,7 @@ class WeatherApp {
       'currentTemp', 'weatherIcon', 'weatherDesc', 'feelsLike',
       'humidity', 'windSpeed', 'visibility', 'pressure',
       'currentLocationBtn', 'retryBtn', 'closeModalBtn', 'searchBtn',
-      'locationSearch', 'modalFavoriteBtn', 'modalSetDefaultBtn',
+      'locationSearch', 'modalFavoriteBtn', 'modalSetDefaultBtn', 'modalLocateBtn',
       'locationModal', 'hourlyForecast', 'dailyForecast',
       'aqiValue', 'aqiDesc', 'aqiValueLarge', 'aqiDescLarge',
       'pm25', 'pm10', 'o3', 'weatherTips', 'weatherTipsCard',
@@ -244,6 +244,11 @@ class WeatherApp {
     this.addEventListenerSafe(this.domElements.retryBtn, 'click', () => this.getCurrentLocation());
     this.addEventListenerSafe(this.domElements.closeModalBtn, 'click', () => this.hideLocationModal());
     this.addEventListenerSafe(this.domElements.searchBtn, 'click', () => this.searchLocation());
+    // 模态内“定位”按钮：关闭模态并触发系统定位
+    this.addEventListenerSafe(this.domElements.modalLocateBtn, 'click', () => {
+      this.hideLocationModal();
+      this.getCurrentLocation(true);
+    });
 
     // 模态框中的按钮事件
     this.addEventListenerSafe(this.domElements.modalFavoriteBtn, 'click', () => this.toggleFavorite());
@@ -332,13 +337,13 @@ class WeatherApp {
   }
 
   // 获取当前位置
-  getCurrentLocation() {
+  getCurrentLocation(forceFresh = false) {
     this.showLoading('正在获取位置信息...');
     
     const options = {
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 300000 // 5分钟缓存
+      maximumAge: forceFresh ? 0 : 300000 // 定位按钮强制新定位
     };
 
     navigator.geolocation.getCurrentPosition(
