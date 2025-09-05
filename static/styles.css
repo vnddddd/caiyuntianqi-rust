@@ -1782,15 +1782,24 @@ body.time-night {
 .icon-stacked span { display: block; line-height: 1; }
 .icon-stacked .i-back {
   position: absolute;
-  left: 0.35em;  /* 再向左，靠近云 */
-  top: 0.08em;  /* 略上移，保证视觉中心 */
+  left: 50%;          /* 以容器中心为参考 */
+  top: 0.06em;        /* 月亮稍高一些 */
+  transform: translateX(-50%); /* 明显向左靠近云朵 */
   z-index: 1;
 }
 .icon-stacked .i-front {
   position: absolute;
-  left: 0.25em;  /* 明显向右，覆盖月亮约一半 */
-  top: 0.24em;   /* 略上移，加深遮挡 */
+  left: 50%;          /* 云以容器中心对齐 */
+  top: 0.24em;        /* 稍微下移，产生遮挡层次 */
+  transform: translateX(-50%); /* 完全水平居中 */
   z-index: 2;
+}
+
+/* 叠层图标在小时/日预报内的尺寸对齐，避免撑高容器 */
+.hourly-icon .icon-stacked,
+.daily-icon  .icon-stacked {
+  width: 1.3em;
+  height: 1em; /* 与单个 emoji 等高 */
 }
 
 /* 定位按钮与标题同行 */
