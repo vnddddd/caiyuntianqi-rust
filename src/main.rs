@@ -515,8 +515,8 @@ async fn api_location_ip(State(_state): State<AppState>, headers: axum::http::He
             let lat = data.get("lat").and_then(|x| x.as_f64());
             let lng = data.get("lng").and_then(|x| x.as_f64());
             let rgeo = data.get("rgeo").cloned().unwrap_or(serde_json::Value::Null);
-            let address = rgeo.get("city").and_then(|x| x.as_str())
-                .or_else(|| rgeo.get("district").and_then(|x| x.as_str()))
+            let address = rgeo.get("district").and_then(|x| x.as_str())
+                .or_else(|| rgeo.get("city").and_then(|x| x.as_str()))
                 .or_else(|| rgeo.get("province").and_then(|x| x.as_str()))
                 .unwrap_or("北京市");
             if let (Some(lat), Some(lng)) = (lat, lng) {
