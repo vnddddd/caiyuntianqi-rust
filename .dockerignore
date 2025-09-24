@@ -1,0 +1,12 @@
+target
+.git
+.github
+.gitignore
+**/*.rs.bk
+README.md
+RUN.md
+.env
+node_modules
+*.log
+Dockerfile
+
