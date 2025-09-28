@@ -32,6 +32,20 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// 视口高度变量：根据 visualViewport/innerHeight 设置 --app-vh，适配安卓地址栏
+(function initViewportVhVariable() {
+  function setAppVh() {
+    const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    document.documentElement.style.setProperty('--app-vh', height + 'px');
+  }
+  setAppVh();
+  window.addEventListener('resize', setAppVh, { passive: true });
+  window.addEventListener('orientationchange', setAppVh, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setAppVh, { passive: true });
+  }
+})();
+
 // 显示更新可用提示
 function showUpdateAvailable() {
   const notification = document.createElement('div');

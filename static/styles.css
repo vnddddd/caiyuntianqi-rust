@@ -58,6 +58,8 @@
   /* 动画关键帧 */
   --glass-glow: 0 0 20px rgba(255, 255, 255, 0.3);
   --glass-pulse-duration: 2s;
+  /* 视口高度变量，默认使用 100dvh，运行时用 JS 精确设置 */
+  --app-vh: 100dvh;
 }
 
 /* 基础重置和字体 */
@@ -67,26 +69,57 @@
   box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  overscroll-behavior-y: none;
+}
+
+html {
+  background: #000; /* 避免极端情况下出现白色底色 */
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
   color: var(--text-primary);
-  background: url('day.png') center center / cover no-repeat;
-  min-height: 100vh;
+  background: none;
+  min-height: var(--app-vh, 100vh);
   transition: background 0.8s ease-in-out;
-  background-attachment: fixed;
 }
 
 /* 时间背景 - 白天背景 (6:00-19:00) */
 body.time-day {
-  background: url('day.png') center center / cover no-repeat;
-  background-attachment: fixed;
 }
 
 /* 时间背景 - 夜晚背景 (19:00-6:00) */
 body.time-night {
-  background: url('night.webp') center center / cover no-repeat;
-  background-attachment: fixed;
+}
+
+/* 固定背景层：使用伪元素替代 background-attachment: fixed，避免移动端抖动 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--app-vh, 100lvh);
+  background-image: url('day.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* 昼夜切换背景图由类控制到伪元素上 */
+body.time-day::before {
+  background-image: url('day.png');
+}
+
+body.time-night::before {
+  background-image: url('night.webp');
 }
 
 /* 夜晚模式下的液态玻璃适配 */
@@ -113,6 +146,8 @@ body.time-night {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1; /* 盖在 body::before 背景层之上 */
 }
 
 .container {
@@ -1826,3 +1861,19 @@ body.time-night {
   line-height: 1.2;
 }
 /* .current-location-info .current-location-title .locate-btn 样式已移除 */
+
+/* 移动端修复：禁用固定背景并使用动态视口高度，避免滚动时白边抖动 */
+/* 新方案兼容：移动端使用动态视口高度以适配地址栏变化 */
+@media (pointer: coarse) {
+  .app-container {
+    min-height: 100dvh;
+  }
+}
+
+@supports not (height: 100dvh) {
+  @media (pointer: coarse) {
+    .app-container {
+      min-height: 100vh;
+    }
+  }
+}
