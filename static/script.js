@@ -190,6 +190,8 @@ class WeatherApp {
     console.log('[WeatherApp] 事件绑定完成');
     // 立即设置基于时间的背景
     this.updateTimeBasedBackground();
+    // 首屏背景淡入
+    requestAnimationFrame(() => document.body.classList.add('bg-ready'));
     console.log('[WeatherApp] 背景更新完成');
     this.checkLocationPermission();
     console.log('[WeatherApp] 开始检查位置权限...');
@@ -773,15 +775,24 @@ class WeatherApp {
     // 判断是白天还是夜晚
     // 白天：6:00-19:00 (6点到19点)
     // 夜晚：19:00-6:00 (19点到次日6点)
-    if (hour >= 6 && hour < 19) {
-      // 白天背景
-      body.classList.add('time-day');
-      console.log('应用白天背景，当前时间:', hour + ':00');
-    } else {
-      // 夜晚背景
-      body.classList.add('time-night');
-      console.log('应用夜晚背景，当前时间:', hour + ':00');
-    }
+    const isDay = hour >= 6 && hour < 19;
+    const targetClass = isDay ? 'time-day' : 'time-night';
+
+    // 若已经是目标类，直接返回
+    if (body.classList.contains(targetClass)) return;
+
+    // 切换时执行淡出 → 切类 → 淡入
+    const fadeOutDuration = 300;
+    const fadeInDuration = 450;
+    body.classList.add('bg-fade-out');
+    setTimeout(() => {
+      body.classList.remove('time-day', 'time-night');
+      body.classList.add(targetClass);
+      body.classList.remove('bg-fade-out');
+      body.classList.add('bg-fade-in');
+      setTimeout(() => body.classList.remove('bg-fade-in'), fadeInDuration);
+    }, fadeOutDuration);
+    console.log('应用背景切换到', isDay ? 'day' : 'night', '当前时间:', hour + ':00');
   }
 
   // 更新空气质量信息
