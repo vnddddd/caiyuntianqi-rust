@@ -111,8 +111,7 @@ body::before {
   pointer-events: none;
   will-change: transform;
   transform: translateZ(0);
-  opacity: 0; /* 首屏默认透明 */
-  transition: opacity 0.6s ease-in-out; /* 首屏淡入过渡 */
+  opacity: 1; /* 直接显示，避免黑屏闪烁 */
 }
 
 /* 昼夜切换背景图由类控制到伪元素上 */
@@ -124,20 +123,7 @@ body.time-night::before {
   background-image: url('night.webp');
 }
 
-/* 就绪后显示背景（首屏淡入） */
-body.bg-ready::before {
-  opacity: 1;
-}
-
-/* 切换时的淡出/淡入辅助类 */
-body.bg-fade-out::before {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-body.bg-fade-in::before {
-  opacity: 1;
-  transition: opacity 0.45s ease;
-}
+/* 移除淡入淡出相关类（避免闪屏） */
 
 /* 夜晚模式下的液态玻璃适配 */
 body.time-night {

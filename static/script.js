@@ -190,8 +190,6 @@ class WeatherApp {
     console.log('[WeatherApp] 事件绑定完成');
     // 立即设置基于时间的背景
     this.updateTimeBasedBackground();
-    // 首屏背景淡入
-    requestAnimationFrame(() => document.body.classList.add('bg-ready'));
     console.log('[WeatherApp] 背景更新完成');
     this.checkLocationPermission();
     console.log('[WeatherApp] 开始检查位置权限...');
@@ -782,16 +780,8 @@ class WeatherApp {
     if (body.classList.contains(targetClass)) return;
 
     // 切换时执行淡出 → 切类 → 淡入
-    const fadeOutDuration = 300;
-    const fadeInDuration = 450;
-    body.classList.add('bg-fade-out');
-    setTimeout(() => {
-      body.classList.remove('time-day', 'time-night');
-      body.classList.add(targetClass);
-      body.classList.remove('bg-fade-out');
-      body.classList.add('bg-fade-in');
-      setTimeout(() => body.classList.remove('bg-fade-in'), fadeInDuration);
-    }, fadeOutDuration);
+    body.classList.remove('time-day', 'time-night');
+    body.classList.add(targetClass);
     console.log('应用背景切换到', isDay ? 'day' : 'night', '当前时间:', hour + ':00');
   }
 
